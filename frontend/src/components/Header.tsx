@@ -30,6 +30,8 @@ export default function Header({ isOpenAside, setIsOpenAside }: Props) {
   const router = useRouter();
   const user = useAppSelector(selectUser);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const imgSrc = !user?.avatar || imgError ? "/images/avatar.png" : user.avatar;
 
   const doNavigate = useCallback(
     (term: string) => {
@@ -144,47 +146,17 @@ export default function Header({ isOpenAside, setIsOpenAside }: Props) {
         )}
         {!isLoggedIn ? (
           <NavLink rout="/signup" text="Увійти" />
-        ) : isAdmin ? (
-          <div className="flex items-center gap-4">
-            <Link href="/da-admin">
-              <div className="w-10 h-10 rounded-full overflow-hidden">
-                {user?.avatar ? (
-                  <Image
-                    src={user?.avatar}
-                    alt="Avatar"
-                    width={40}
-                    height={40}
-                  />
-                ) : (
-                  <Image
-                    src="/images/avatar.png"
-                    alt="Avatar"
-                    width={40}
-                    height={40}
-                  />
-                )}
-              </div>
-            </Link>
-          </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Link href="/profile">
+            <Link href={isAdmin ? "/da-admin" : "/profile"}>
               <div className="w-10 h-10 rounded-full overflow-hidden">
-                {user?.avatar ? (
-                  <Image
-                    src={user?.avatar}
-                    alt="Avatar"
-                    width={40}
-                    height={10}
-                  />
-                ) : (
-                  <Image
-                    src="/images/avatar.png"
-                    alt="Avatar"
-                    width={40}
-                    height={40}
-                  />
-                )}
+                <Image
+                  src={imgSrc}
+                  alt="Avatar"
+                  width={40}
+                  height={40}
+                  onError={() => setImgError(true)}
+                />
               </div>
             </Link>
           </div>
